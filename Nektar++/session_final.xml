@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<NEKTAR>
+
+  <!-- ================================================ -->
+  <!--  SOLVER INFO                                     -->
+ <CONDITIONS> <!-- ================================================ -->
+  <EXPANSIONS>
+    <E COMPOSITE="C[100]" NUMMODES="11" TYPE="MODIFIED" FIELDS="u,v,p" />
+  </EXPANSIONS>
+
+  <SOLVERINFO>
+    <I PROPERTY="SolverType"             VALUE="VelocityCorrectionScheme" />
+    <I PROPERTY="EQTYPE"                 VALUE="UnsteadyNavierStokes"     />
+    <I PROPERTY="AdvectionForm"          VALUE="Convective"               />
+    <I PROPERTY="Projection"             VALUE="Continuous"               />
+  </SOLVERINFO>
+  <TIMEINTEGRATIONSCHEME>
+    <METHOD> IMEX </METHOD>
+    <ORDER> 2 </ORDER>
+  </TIMEINTEGRATIONSCHEME>
+  <!-- ================================================ -->
+  <!--  PARAMETERS                                      -->
+  <!-- ================================================ -->
+  <PARAMETERS>
+    <P> TimeStep       = 0.005  </P>
+    <P> NumSteps =       50000  </P>   <!-- stable dt for Re=100 -->
+    <P> FinalTime      = 20.0   </P>   <!-- 20 physical seconds  -->
+    <P> IO_CheckSteps  = 20    </P>   <!-- save every 1.0s      -->
+    <P> IO_InfoSteps   = 200    </P>   <!-- console every 0.5s   -->
+    <P> Kinvis         = 0.01   </P>   <!-- nu = 1/Re            -->
+  </PARAMETERS>
+
+  <!-- ================================================ -->
+  <!--  VARIABLES                                       -->
+  <!-- ================================================ -->
+  <VARIABLES>
+    <V ID="0"> u </V>
+    <V ID="1"> v </V>
+    <V ID="2"> p </V>
+  </VARIABLES>
+
+  <!-- ================================================ -->
+  <!--  BOUNDARY REGIONS — matched to mesh composites  -->
+  <!-- ================================================ -->
+  <BOUNDARYREGIONS>
+    <B ID="0"> C[1] </B>   <!-- inlet    -->
+    <B ID="1"> C[2] </B>   <!-- outlet   -->
+    <B ID="2"> C[3] </B>   <!-- walls    -->
+    <B ID="3"> C[4] </B>   <!-- cylinder -->
+  </BOUNDARYREGIONS>
+
+  <!-- ================================================ -->
+  <!--  BOUNDARY CONDITIONS                             -->
+  <!-- ================================================ -->
+  <BOUNDARYCONDITIONS>
+
+    <!-- Inlet: uniform inflow u=1, v=0 -->
+    <REGION REF="0">
+      <D VAR="u" VALUE="1.0" />
+      <D VAR="v" VALUE="0.0" />
+      <N VAR="p" VALUE="0.0" />
+    </REGION>
+
+    <!-- Outlet: stress-free, p=0 -->
+    <REGION REF="1">
+      <N VAR="u" VALUE="0.0" />
+      <N VAR="v" VALUE="0.0" />
+      <D VAR="p" VALUE="0.0" />
+    </REGION>
+
+    <!-- Top/bottom walls: free-slip (match free-stream) -->
+    <REGION REF="2">
+      <D VAR="u" VALUE="1.0" />
+      <D VAR="v" VALUE="0.0" />
+      <N VAR="p" VALUE="0.0" />
+    </REGION>
+
+    <!-- Cylinder: no-slip -->
+    <REGION REF="3">
+      <D VAR="u" VALUE="0.0" />
+      <D VAR="v" VALUE="0.0" />
+      <N VAR="p" VALUE="0.0" />
+    </REGION>
+
+  </BOUNDARYCONDITIONS>
+
+  <!-- ================================================ -->
+  <!--  INITIAL CONDITIONS                              -->
+  <!-- ================================================ -->
+  <FUNCTION NAME="InitialConditions">
+    <E VAR="u" VALUE="1.0 + 0.05*sin(2*PI*y)" />
+    <E VAR="v" VALUE="0.0" />
+    <E VAR="p" VALUE="0.0" />
+  </FUNCTION>
+ </CONDITIONS>
+  <!-- ================================================ -->
+  <!--  EXPANSIONS                                      -->
+  <!--  C[100] = fluid domain (matches DOMAIN in mesh) -->
+  <!--  NUMMODES=9 = polynomial order 8                -->
+  <!--  Change to 7 (order 6) for faster runs          -->
+  <!-- ================================================ -->
+  <!--  FILTERS — drag/lift on cylinder                -->
+  <!-- ================================================ -->
+ <FILTERS>
+    <FILTER TYPE="AeroForces">
+      <PARAM NAME="OutputFile">      cylinder_forces </PARAM>
+      <PARAM NAME="OutputFrequency"> 10              </PARAM>
+      <PARAM NAME="Boundary">        B[3]            </PARAM>
+      <PARAM NAME="Density">         1.0             </PARAM>
+      <PARAM NAME="SurfaceArea">     1.0             </PARAM>
+    </FILTER>
+ </FILTERS>
+
+</NEKTAR>
