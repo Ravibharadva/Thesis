@@ -1,0 +1,13 @@
+============================================================
+  RESULTS  (cylinder_nektar_wake.mat, Re = 100)
+============================================================
+  Clean data (Adam + L-BFGS-B):
+    lambda_1 = 0.998865   (true = 1.0,  error = 0.1135%)
+    lambda_2 = 0.010267   (true = 0.01, error = 2.6723%)
+    rel. L2 error u : 4.5173e-03
+    rel. L2 error v : 1.2585e-02
+    rel. L2 error p : 2.0094e-02   (after mean shift)
+  Noisy data, 1% noise (Adam only, 40000 iterations):
+    lambda_1 = 0.993907   (error = 0.6093%)
+    lambda_2 = 0.010641   (error = 6.4125%)
+============================================================
