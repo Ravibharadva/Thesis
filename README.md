@@ -118,5 +118,6 @@ M. Raissi, P. Perdikaris, G. E. Karniadakis. *Physics-informed neural networks: 
 I thank Prof. Dr. Martin Siebenborn and Dr. Christian Kahle for supervising this thesis. The reference simulations were produced with the open-source spectral/hp element framework Nektar++.
 
 ## Contact
+Ravi Bharadva
+rbharadva28@gmail.com
 
-Nandkishor Virani — GitHub: [@Ravibharadva](https://github.com/Ravibharadva)
